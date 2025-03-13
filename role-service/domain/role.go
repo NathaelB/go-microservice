@@ -9,10 +9,10 @@ import (
 
 type Role struct {
 	gorm.Model
-	ID        string   `json:"id"`
-	Name      string   `json:"name"`
-	GuildID   string   `json:"guild_id"`
-	MembersID []string `json:"members"`
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	GuildID string `json:"guild_id"`
+	// MembersID []string `json:"members"`
 }
 
 func NewRole(name string, guildID string) (*Role, error) {
@@ -26,5 +26,6 @@ func NewRole(name string, guildID string) (*Role, error) {
 		ID:      uid,
 		Name:    name,
 		GuildID: guildID,
+		// MembersID: []string{},
 	}, nil
 }
