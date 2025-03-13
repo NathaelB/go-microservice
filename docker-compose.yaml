@@ -7,8 +7,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: keycloak
+      POSTGRES_MULTIPLE_DATABASES: guild_service
     volumes:
       - postgres_data:/bitnami/postgresql
+      - ./init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
     ports:
       - 5432:5432
     healthcheck:
