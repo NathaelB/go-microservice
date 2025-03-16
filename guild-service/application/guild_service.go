@@ -1,13 +1,17 @@
 package application
 
-import "guild-service/domain"
+import (
+	"guild-service/domain"
+	"guild-service/infrastructure"
+)
 
 type GuildServiceImpl struct {
-	repo domain.GuildRepository
+	repo  domain.GuildRepository
+	kafka *infrastructure.KafkaClient
 }
 
-func NewGuildService(r domain.GuildRepository) domain.GuildService {
-	return &GuildServiceImpl{repo: r}
+func NewGuildService(r domain.GuildRepository, k *infrastructure.KafkaClient) domain.GuildService {
+	return &GuildServiceImpl{repo: r, kafka: k}
 }
 
 func (s *GuildServiceImpl) CreateGuild(name, ownerID string) (*domain.Guild, error) {
@@ -17,6 +21,12 @@ func (s *GuildServiceImpl) CreateGuild(name, ownerID string) (*domain.Guild, err
 	}
 
 	err = s.repo.Save(guild)
+	if err != nil {
+		return nil, err
+	}
+
+	err = infrastructure.SendMessage(s.kafka, "create-guild", guild)
+
 	if err != nil {
 		return nil, err
 	}
@@ -31,4 +41,8 @@ func (s *GuildServiceImpl) GetGuildByID(id string) (*domain.Guild, error) {
 	}
 
 	return guild, nil
+}
+
+func (s *GuildServiceImpl) GetAllGuilds() ([]*domain.Guild, error) {
+	return s.repo.FindAll()
 }

@@ -39,19 +39,6 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
-  schema-registry:
-    image: confluentinc/cp-schema-registry:latest
-    hostname: schema-registry
-    depends_on:
-      - kafka1
-    ports:
-      - "8081:8081"
-    environment:
-      SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
-      SCHEMA_REGISTRY_LISTENERS: http://schema-registry:8081
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka1:9092,PLAINTEXT_INTERNAL://localhost:19092
-      SCHEMA_REGISTRY_DEBUG: 'true'
   kafka1:
     image: confluentinc/cp-kafka:latest
     hostname: kafka1
@@ -98,8 +85,5 @@ services:
             docker-kafka-server:
               properties:
                 bootstrap.servers: "kafka1:9092"
-              schema-registry:
-                url: "http://schema-registry:8081"
-
 volumes:
   postgres_data:

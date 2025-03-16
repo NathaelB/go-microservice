@@ -10,7 +10,7 @@ import (
 
 type Guild struct {
 	gorm.Model
-	ID        string    `json:"id"`
+	ID        string    `json:"id" gorm:"primaryKey"`
 	Name      string    `json:"name"`
 	OwnerID   string    `json:"owner_id"`
 	CreatedAt time.Time `json:"created_at"`
