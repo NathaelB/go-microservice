@@ -76,10 +76,12 @@ services:
       kafka-topics --bootstrap-server kafka1:9092 --list
 
       echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic guild-events --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic role-events --replication-factor 1 --partitions 1
-      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic member-events --replication-factor 1 --partitions 1
-
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic create-guild --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic delete-guild --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic create-role --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic delete-role --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic add-member --replication-factor 1 --partitions 1
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic remove-member --replication-factor 1 --partitions 1
 
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka1:9092 --list
