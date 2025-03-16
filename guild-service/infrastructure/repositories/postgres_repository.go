@@ -24,3 +24,9 @@ func (r *PostgresGuildRepository) FindByID(id string) (*domain.Guild, error) {
 
 	return &guild, err
 }
+
+func (r *PostgresGuildRepository) FindAll() ([]*domain.Guild, error) {
+	var guilds []*domain.Guild
+	err := r.db.Find(&guilds).Error
+	return guilds, err
+}
