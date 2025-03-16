@@ -26,6 +26,7 @@ Création des bases de données pour chaque microservice.
 docker exec -it postgres psql -U postgres
 CREATE DATABASE member_service;
 CREATE DATABASE guild_service;
+CREATE DATABASE role_service;
 ```
 
 ## A faire
@@ -56,7 +57,7 @@ CREATE DATABASE guild_service;
 - Intégration avec nos Services :
         Utiliser les bibliothèques Go pour intégrer Keycloak dans nos services afin de gérer l'authentification et l'autorisation.
 
-### mplémentation d'Avro pour la Sérialisation
+### Implémentation d'Avro pour la Sérialisation
 
 - Définir les Schémas Avro :
         Créer des fichiers .avsc pour définir les schémas de nos événements.
