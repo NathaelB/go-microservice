@@ -25,6 +25,12 @@ func (s *GuildServiceImpl) CreateGuild(name, ownerID string) (*domain.Guild, err
 		return nil, err
 	}
 
+	err = infrastructure.SendMessage(s.kafka, "create-guild", guild)
+
+	if err != nil {
+		return nil, err
+	}
+
 	return guild, nil
 }
 
