@@ -10,7 +10,7 @@ type PostgresMemberRepository struct {
 	db *gorm.DB
 }
 
-func NewPostgresMemebrRepository(db *gorm.DB) domain.MemberRepository {
+func NewPostgresMemberRepository(db *gorm.DB) domain.MemberRepository {
 	return &PostgresMemberRepository{db: db}
 }
 
@@ -23,4 +23,11 @@ func (r *PostgresMemberRepository) FindByID(id string) (*domain.Member, error) {
 	err := r.db.Where("id = ?", id).First(&member).Error
 
 	return &member, err
+}
+
+func (r *PostgresMemberRepository) FindAll() ([]*domain.Member, error) {
+	var members []*domain.Member
+	err := r.db.Find(&members).
+		Error
+	return members, err
 }

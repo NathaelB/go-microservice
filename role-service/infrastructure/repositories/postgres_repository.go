@@ -24,3 +24,8 @@ func (r *PostgresRoleRepository) FindByID(id string) (*domain.Role, error) {
 
 	return &role, err
 }
+func (r *PostgresRoleRepository) FindAll() ([]*domain.Role, error) {
+	var roles []*domain.Role
+	err := r.db.Find(&roles).Error
+	return roles, err
+}

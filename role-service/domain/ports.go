@@ -1,11 +1,13 @@
 package domain
 
 type RoleRepository interface {
-	Save(guild *Role) error
+	Save(role *Role) error
 	FindByID(id string) (*Role, error)
+	FindAll() ([]*Role, error)
 }
 
 type RoleService interface {
-	CreateRole(name string, guildID string) (*Role, error)
+	CreateRole(name string, guilId string) (*Role, error)
 	GetRoleByID(id string) (*Role, error)
+	GetAllRoles() ([]*Role, error)
 }
