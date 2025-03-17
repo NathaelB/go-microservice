@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/segmentio/kafka-go"
 
+	"github.com/segmentio/kafka-go"
 )
 
 type KafkaClient struct {
@@ -58,6 +58,8 @@ func ConsumeMessages[T any](client *KafkaClient, topic string, groupID string, h
 		if err != nil {
 			return fmt.Errorf("failed to read message: %w", err)
 		}
+
+		fmt.Println("Message received:", string(message.Value))
 
 		var data T
 		err = json.Unmarshal(message.Value, &data)
