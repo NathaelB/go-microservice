@@ -1,12 +1,13 @@
 package application
 
 import (
+	"fmt"
 	"role-service/domain"
 	"role-service/infrastructure"
 )
 
 type RoleServiceImpl struct {
-	repo domain.RoleRepository
+	repo  domain.RoleRepository
 	kafka *infrastructure.KafkaClient
 }
 
@@ -39,4 +40,22 @@ func (s *RoleServiceImpl) GetRoleByID(id string) (*domain.Role, error) {
 
 func (s *RoleServiceImpl) GetAllRoles() ([]*domain.Role, error) {
 	return s.repo.FindAll()
+}
+
+type GuildMessage struct {
+	GuildID string `json:"guild_id"`
+}
+
+func (s *RoleServiceImpl) HandleGuildCreated(event domain.GuildCreatedEvent) error {
+
+	role := &domain.Role{
+		Name:    "everyone",
+		GuildID: event.ID,
+	}
+
+	if err := s.repo.Save(role); err != nil {
+		return fmt.Errorf("failed to create role from guild message")
+
+	}
+	return nil
 }
