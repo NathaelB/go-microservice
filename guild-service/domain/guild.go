@@ -5,11 +5,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
+// Guild représente une guilde dans le système
 type Guild struct {
-	gorm.Model
 	ID        string    `json:"id" gorm:"primaryKey"`
 	Name      string    `json:"name"`
 	OwnerID   string    `json:"owner_id"`
@@ -17,6 +16,7 @@ type Guild struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
+// NewGuild crée une nouvelle instance de Guild
 func NewGuild(name, ownerID string) (*Guild, error) {
 	if name == "" {
 		return nil, errors.New("name is required")

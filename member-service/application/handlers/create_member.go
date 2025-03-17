@@ -8,7 +8,8 @@ import (
 )
 
 type CreateMemberRequest struct {
-	Name string `json:"name" binding:"required"`
+	Name    string `json:"name" binding:"required"`
+	GuildID string `json:"guild_id" binding:"required"`
 }
 
 type CreateMemberHandler struct {
@@ -28,7 +29,7 @@ func (h *CreateMemberHandler) Handle(c *gin.Context) {
 		return
 	}
 
-	member, err := h.memberService.CreateMember(req.Name)
+	member, err := h.memberService.CreateMember(req.Name, req.GuildID)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
