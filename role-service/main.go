@@ -26,7 +26,9 @@ func main() {
 	roleRepository := repositories.NewPostgresRoleRepository(db)
 	roleService := application.NewRoleService(roleRepository, kafka)
 
+	infrastructure.StartGuildCreatedConsumer(kafka, roleService)
+
 	httpServer := application.NewHTTPServer(roleService)
 
-	log.Fatal(httpServer.Start(":3333"))
+	log.Fatal(httpServer.Start(":3335"))
 }
