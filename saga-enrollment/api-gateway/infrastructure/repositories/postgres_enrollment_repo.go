@@ -34,3 +34,7 @@ func (r *PostgresEnrollmentRepository) Create(dto domain.CreateEnrollmentDatabas
 	}
 	return &enrollment, nil
 }
+
+func (r *PostgresEnrollmentRepository) Update(id string, dto domain.UpdateEnrollmentSchema) error {
+	return r.db.Model(&domain.Enrollment{}).Where("id = ?", id).Updates(dto).Error
+}

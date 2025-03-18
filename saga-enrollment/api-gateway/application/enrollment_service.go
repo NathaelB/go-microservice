@@ -41,3 +41,10 @@ func (s *EnrollmentServiceImpl) Create(dto domain.CreateEnrollmentRequest) (*dom
 
 	return enrollment, nil
 }
+
+func (s *EnrollmentServiceImpl) FailedNotFound(id string) error {
+	return s.repo.Update(id, domain.UpdateEnrollmentSchema{
+		Status:        "FAILED",
+		FailureReason: "COURSE_NOT_FOUND",
+	})
+}

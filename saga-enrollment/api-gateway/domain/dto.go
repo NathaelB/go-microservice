@@ -12,3 +12,8 @@ type CreateEnrollmentDatabase struct {
 	CourseID      string `json:"course_id"`
 	PaymentMethod string `json:"payment_method"`
 }
+
+type UpdateEnrollmentSchema struct {
+	Status        string `json:"status,omitempty"`
+	FailureReason string `json:"failure_reason,omitempty"`
+}

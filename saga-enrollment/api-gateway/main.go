@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"api-gateway/application"
+	"api-gateway/application/events"
 	"api-gateway/domain"
 	"api-gateway/infrastructure"
 	"api-gateway/infrastructure/repositories"
@@ -27,6 +28,8 @@ func main() {
 
 	enrollmentRepo := repositories.NewPostgresEnrollmentRepository(db)
 	enrollmentService := application.NewEnrollmentService(enrollmentRepo, kafka)
+
+	events.CourseNotFoundConsumer(kafka, enrollmentService)
 
 	httpServer := application.NewHTTPServer(enrollmentService)
 
