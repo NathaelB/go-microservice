@@ -1,18 +1,17 @@
 package infrastructure
 
 import (
-	"context"
 	"log"
 	"role-service/domain"
 )
 
-func StartGuildCreatedConsumer(ctx context.Context, client *KafkaClient, service domain.RoleService) {
+func StartGuildCreatedConsumer(client *KafkaClient, service domain.RoleService) {
 	go func() {
 		log.Println("Starting Guild Created Event consumer...")
 
 		err := ConsumeMessages[domain.GuildCreatedEvent](
 			client,
-			"create-guild",   // Topic à écouter
+			"create-guild", // Topic à écouter
 			"role-service", // ID du groupe de consommateurs
 			func(event domain.GuildCreatedEvent) error {
 				log.Printf("Received guild created event: ID=%s, Name=%s, OwnerID=%s",
