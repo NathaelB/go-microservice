@@ -10,4 +10,5 @@ type RoleService interface {
 	CreateRole(name string, guilId string) (*Role, error)
 	GetRoleByID(id string) (*Role, error)
 	GetAllRoles() ([]*Role, error)
+	HandleGuildCreated(event GuildCreatedEvent) error
 }
