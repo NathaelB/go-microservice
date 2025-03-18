@@ -43,8 +43,20 @@ func (s *EnrollmentServiceImpl) Create(dto domain.CreateEnrollmentRequest) (*dom
 }
 
 func (s *EnrollmentServiceImpl) FailedNotFound(id string) error {
-	return s.repo.Update(id, domain.UpdateEnrollmentSchema{
+	err := s.repo.Update(id, domain.UpdateEnrollmentSchema{
 		Status:        "FAILED",
 		FailureReason: "COURSE_NOT_FOUND",
 	})
+
+	if err != nil {
+		return err
+	}
+
+	// Send message to announce the enrollment failure
+	failureEvent := domain.EnrollmentFailuresEvent{ID: id}
+	if err := infrastructure.SendMessage(s.kafka, "enrollment-failures", failureEvent); err != nil {
+		return err
+	}
+
+	return nil
 }
