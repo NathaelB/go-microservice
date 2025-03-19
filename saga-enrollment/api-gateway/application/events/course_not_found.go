@@ -13,7 +13,7 @@ func CourseNotFoundConsumer(client *infrastructure.KafkaClient, service domain.E
 
 		err := infrastructure.ConsumeMessages[domain.CourseNotFoundEvent](
 			client,
-			"course-not-found",
+			"enrollment-course-not-found",
 			"api-gateway",
 			func(event domain.CourseNotFoundEvent) error {
 				log.Printf("Received course not found event: ID=%s", event.ID)
