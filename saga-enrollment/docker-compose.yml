@@ -38,6 +38,29 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_INTERNAL://localhost:19092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  kafka-setup:
+    image: confluentinc/cp-kafka:latest
+    networks:
+      - saga-enrollment-network
+    depends_on:
+      - kafka1
+    entrypoint: [ "/bin/sh", "-c" ]
+    command: |
+      "
+      # Wait for Kafka to be ready
+      echo 'Waiting for Kafka to be ready...'
+      cub kafka-ready -b kafka1:9092 1 30
+      
+      # Create topics
+      echo 'Creating Kafka topics...'
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic enrollment-course-not-found --partitions 1 --replication-factor 1
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic enrollment-course-validated --partitions 1 --replication-factor 1
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic enrollment-requests --partitions 1 --replication-factor 1
+      
+      echo 'Kafka topics created successfully'
+      exit 0
+      "
+
   akhq:
     image: tchiotludo/akhq:latest
     networks:
