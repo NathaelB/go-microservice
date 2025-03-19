@@ -3,7 +3,6 @@ package events
 import (
 	"course-service/domain"
 	"course-service/infrastructure"
-	"errors"
 	"log"
 )
 
@@ -20,42 +19,35 @@ func EnrollmentCreateConsumer(client *infrastructure.KafkaClient, service domain
 				log.Printf("Received enrollment create event: ID=%s", event.ID)
 
 				// Verify if the course exists
+				// Try to find the course by ID
 				course, err := service.FindByID(event.CourseID)
-				if err != nil {
-					log.Printf("Error finding course: %v", err)
 
-					notifyErr := infrastructure.SendMessage(client, "enrollment-course-not-found", domain.EnrollmentCourseNotFoundEvent{
+				// Handle course not found scenarios (error or nil course)
+				if err != nil || course == nil {
+					log.Printf("Course not found or error: ID=%s, Error=%v", event.CourseID, err)
+
+					// Create the course not found event
+					notFoundEvent := domain.EnrollmentCourseNotFoundEvent{
 						ID: event.ID,
-					})
-
-					if notifyErr != nil {
-						log.Printf("Error publishing course-not-found event: %v", notifyErr)
 					}
-
-					return err
-				}
-
-				if course == nil {
-					log.Printf("Course not found: ID=%s", event.CourseID)
 
 					// Notify that the course doesn't exist
-					notifyErr := infrastructure.SendMessage(client, "enrollment-course-not-found", domain.EnrollmentCourseNotFoundEvent{
-						ID: event.ID,
-					})
-
-					if notifyErr != nil {
+					if notifyErr := infrastructure.SendMessage(client, "enrollment-course-not-found", notFoundEvent); notifyErr != nil {
 						log.Printf("Error publishing course-not-found event: %v", notifyErr)
+						return notifyErr
 					}
 
-					return errors.New("course not found")
+					// We don't return an error if the course is not found
+					// We only return errors from Kafka operations
+					return nil
 				}
 
-				// Notify that the course exists
-				notifyErr := infrastructure.SendMessage(client, "enrollment-course-validated", domain.EnrollmentCourseValidatedEvent{
+				// Course exists, notify validation
+				validatedEvent := domain.EnrollmentCourseValidatedEvent{
 					ID: event.ID,
-				})
+				}
 
-				if notifyErr != nil {
+				if notifyErr := infrastructure.SendMessage(client, "enrollment-course-validated", validatedEvent); notifyErr != nil {
 					log.Printf("Error publishing course-validated event: %v", notifyErr)
 					return notifyErr
 				}

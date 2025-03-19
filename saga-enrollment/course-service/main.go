@@ -20,7 +20,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db.AutoMigrate(&domain.Course{})
+	db.AutoMigrate(&domain.Course{}, &domain.Student{}, &domain.CourseStudent{})
 	fmt.Println("Database migrated")
 
 	kafka := infrastructure.NewKafkaClient([]string{"localhost:19092"})
@@ -30,6 +30,6 @@ func main() {
 
 	events.EnrollmentCreateConsumer(kafka, courseService)
 
-	// httpServer := application.NewHTTPServer(courseService)
-	// log.Fatal(httpServer.Start(":3334"))
+	httpServer := application.NewHTTPServer(courseService)
+	log.Fatal(httpServer.Start(":3334"))
 }
